@@ -1,0 +1,14 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Recipe Finder Plugin",
+  "name_for_model": "recipefinder",
+  "description_for_human": "Plugin for finding recipes based on ingredients",
+  "description_for_model": "Plugin for finding recipes based on ingredients",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "http://127.0.0.1:8080",
+    "is_user_authenticated": false
+  }

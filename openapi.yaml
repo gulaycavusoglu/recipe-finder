@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: Recipe Finder API
+  description: API for finding recipes based on ingredients
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080
+paths:
+  /recipes:
+    get:
+      summary: Find recipes by ingredients
+      operationId: findRecipesByIngredients
+      parameters:
+        - name: ingredients
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Comma-separated list of ingredients
+        - name: number
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Maximum number of recipes to return (between 1 and 100)
+        - name: limitLicense
+          in: query
+          schema:
+            type: boolean
+          description: Whether the recipes should have an open license that allows display with proper attribution
+        - name: ranking
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2
+          description: Whether to maximize used ingredients (1) or minimize missing ingredients (2) first
+        - name: ignorePantry
+          in: query
+          schema:
+            type: boolean
+          description: Whether to ignore typical pantry items, such as water, salt, flour, etc.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+    /recipes/{id}/similar:
+      get:
+        summary: Find similar recipes
+        operationId: findSimilarRecipes
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              minimum: 1
+            description: ID of the source recipe for which similar recipes should be found
+          - name: number
+            in: query
+            schema:
+              type: integer
+              minimum: 1
+              maximum: 100
+            description: Number of random recipes to be returned (between 1 and 100)
+          - name: limitLicense
+            in: query
+            schema:
+              type: boolean
+            description: Whether the recipes should have an open license that allows display with proper attribution
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Recipe'
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        image:
+          type: string
+        likes:
+          type: integer
+        missedIngredientCount:
+          type: integer
+        missedIngredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        unusedIngredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        usedIngredientCount:
+          type: integer
+        usedIngredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+    Ingredient:
+      type: object
+      properties:
+        aisle:
+          type: string
+        amount:
+          type: number
+        id:
+          type: integer
+        image:
+          type: string
+        meta:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+        original:
+          type: string
+        originalName:
+          type: string
+        unit:
+          type: string
+        unitLong:
+          type: string
+        unitShort:
+          type: string
